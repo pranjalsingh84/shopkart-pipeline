@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.9.11'      // 🔁 Use the exact name from Jenkins > Global Tool Config
-        jdk 'JDK21'              // 🔁 Match name from Jenkins > Global Tool Config
+        maven 'maven-3.9.11'      // ✅ Match exactly with Jenkins > Global Tool Config
+        jdk 'jdk21'               // ✅ Match exactly with Jenkins > Global Tool Config
     }
 
     environment {
@@ -31,10 +31,11 @@ pipeline {
 
         stage('Deploy to Tomcat') {
             steps {
-                deploy adapters: [tomcat8(credentialsId: 'tomcat-cred-id',   // 🔁 Your Jenkins credentials ID
-                                          path: '', 
-                                          url: 'http://localhost:8080')], 
-                       war: "target/${env.WAR_NAME}"
+                deploy adapters: [tomcat8(
+                    credentialsId: 'tomcat-cred-id',
+                    path: '', 
+                    url: 'http://localhost:8080')],
+                war: "target/${env.WAR_NAME}"
             }
         }
     }
