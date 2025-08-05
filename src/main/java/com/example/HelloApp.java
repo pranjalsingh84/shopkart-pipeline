@@ -1,11 +1,12 @@
 package com.example;
 
 public class HelloApp {
+
     public static void main(String[] args) {
-        System.out.println("Hello from Jenkins Pipeline Project!");
+        System.out.println("Hello World!");
     }
 
-    public static String greet() {
-        return "Hello DevOps World!";
+    public String getMessage() {
+        return "Hello from HelloApp!";
     }
 }
