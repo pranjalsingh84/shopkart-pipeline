@@ -2,47 +2,40 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.8.1'
-        jdk 'JDK11'
+        maven 'Maven 3.8.5'      // 🔁 Use the exact name from Jenkins > Global Tool Config
+        jdk 'JDK11'              // 🔁 Match name from Jenkins > Global Tool Config
     }
 
     environment {
-        DEPLOY_PATH = "/path/to/tomcat/webapps"  // Optional
+        WAR_NAME = "shopkart-pipeline.war"
     }
 
     stages {
-        stage('Clone') {
+        stage('Checkout Code') {
             steps {
-                git 'https://github.com/pranjalsingh84/shopkart-pipeline.git'
+                git url: 'https://github.com/pranjalsingh84/shopkart-pipeline.git', branch: 'main'
             }
         }
 
-        stage('Build') {
+        stage('Build with Maven') {
             steps {
                 sh 'mvn clean package'
             }
         }
 
-        stage('Test') {
+        stage('Archive WAR') {
             steps {
-                sh 'mvn test'
+                archiveArtifacts artifacts: "target/${env.WAR_NAME}", fingerprint: true
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Tomcat') {
             steps {
-                echo "Copying WAR file to Tomcat (optional)"
-                // sh 'cp target/*.war $DEPLOY_PATH'
+                deploy adapters: [tomcat8(credentialsId: 'tomcat-cred-id',   // 🔁 Your Jenkins credentials ID
+                                          path: '', 
+                                          url: 'http://localhost:8080')], 
+                       war: "target/${env.WAR_NAME}"
             }
-        }
-    }
-
-    post {
-        success {
-            echo "✅ Build, Test, and Deploy successful!"
-        }
-        failure {
-            echo "❌ Pipeline failed!"
         }
     }
 }
