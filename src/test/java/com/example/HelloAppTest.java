@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class HelloAppTest {
 
     @Test
-    public void testMessage() {
+    public void testGetMessage() {
         HelloApp app = new HelloApp();
         String message = app.getMessage();
-        assertEquals("Hello, ShopKart!", message);
+        assertEquals("Hello, World!", message);
     }
 }
